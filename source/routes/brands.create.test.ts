@@ -1,6 +1,6 @@
 import application from "../application.js";
 import { count, signIn } from "../test_helper.js";
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 
 describe("POST /brands", () => {
   it("responds with success and creates a brand", async () => {

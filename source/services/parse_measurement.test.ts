@@ -1,4 +1,4 @@
-import { describe, it, expect } from "bun:test";
+import { describe, it, expect } from "vitest";
 import { parseMeasurement } from "./parse_measurement.js";
 
 describe(".parse_measurement", () => {

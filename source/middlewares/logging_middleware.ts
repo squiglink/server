@@ -1,5 +1,6 @@
 import configuration from "../configuration.js";
 import { createMiddleware } from "hono/factory";
+import { randomUUID } from "node:crypto";
 
 export const loggingMiddleware = createMiddleware(async (context, next) => {
   if (context.req.method === "OPTIONS") {
@@ -13,7 +14,7 @@ export const loggingMiddleware = createMiddleware(async (context, next) => {
   }
 
   const timestamp = new Date().toISOString();
-  const uuid = crypto.randomUUID();
+  const uuid = randomUUID();
 
   const log = (message: string) => {
     console.log(`[${uuid}] [${timestamp}] ${message}`);

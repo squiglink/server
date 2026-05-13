@@ -1,7 +1,7 @@
 import application from "../application.js";
 import { count, signIn } from "../test_helper.js";
 import { database } from "../database.js";
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 import { insertDatabase, insertModel, insertUser } from "../test_helper.factories.js";
 
 describe("POST /measurements", () => {

@@ -1,21 +1,21 @@
+import * as getCurrentUserModule from "../services/get_current_user.js";
 import { authenticationMiddleware } from "./authentication_middleware.js";
-import { beforeEach, describe, expect, it, mock } from "bun:test";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const getCurrentUser = mock();
-mock.module("../services/get_current_user.js", () => ({ getCurrentUser }));
+vi.mock("../services/get_current_user.js");
 
 describe(".authenticationMiddleware", () => {
   beforeEach(() => {
-    getCurrentUser.mockClear();
+    vi.clearAllMocks();
   });
 
   it("responds with unauthorized if the authorization token is invalid", async () => {
-    const body = mock();
+    const body = vi.fn();
     const context: any = {
       body,
-      req: { header: mock().mockReturnValue("invalid") },
+      req: { header: vi.fn().mockReturnValue("invalid") },
     };
-    getCurrentUser.mockResolvedValue(null);
+    vi.mocked(getCurrentUserModule.getCurrentUser).mockResolvedValue(null);
 
     await authenticationMiddleware(context, async () => {
       throw new Error("Reached unreachable.");
@@ -25,10 +25,10 @@ describe(".authenticationMiddleware", () => {
   });
 
   it("responds with unauthorized if the authorization token is not present", async () => {
-    const body = mock();
+    const body = vi.fn();
     const context: any = {
       body,
-      req: { header: mock().mockReturnValue(undefined) },
+      req: { header: vi.fn().mockReturnValue(undefined) },
     };
 
     await authenticationMiddleware(context, async () => {
@@ -40,19 +40,20 @@ describe(".authenticationMiddleware", () => {
 
   it("sets the current user context variable", async () => {
     const context: any = {
-      req: { header: mock().mockReturnValue("valid") },
-      set: mock(),
+      req: { header: vi.fn().mockReturnValue("valid") },
+      set: vi.fn(),
     };
     const currentUser = {
       created_at: new Date(),
       display_name: "placeholder",
       email: "placeholder",
       id: "placeholder",
+      role: "creator" as const,
       scoring_system: "five_star" as const,
       updated_at: new Date(),
       username: "placeholder",
     };
-    getCurrentUser.mockResolvedValue(currentUser);
+    vi.mocked(getCurrentUserModule.getCurrentUser).mockResolvedValue(currentUser);
 
     await authenticationMiddleware(context, async () => {});
 

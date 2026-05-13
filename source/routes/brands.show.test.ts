@@ -1,6 +1,6 @@
 import application from "../application.js";
 import { database } from "../database.js";
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 import { insertBrand, insertModel } from "../test_helper.factories.js";
 
 describe("GET /brands/:id", () => {
@@ -13,11 +13,11 @@ describe("GET /brands/:id", () => {
     });
 
     const body = {
-      created_at: brand.created_at.toISOString(),
+      created_at: brand.created_at,
       id: brand.id,
       model_count: modelCount,
       name: brand.name,
-      updated_at: brand.updated_at.toISOString(),
+      updated_at: brand.updated_at,
     };
 
     const response = await application.request(`/brands/${brand.id}`);

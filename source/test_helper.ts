@@ -1,4 +1,4 @@
-import { beforeEach } from "bun:test";
+import { beforeEach } from "vitest";
 import { database } from "./database.js";
 import {
   insertJwtAccessToken,

@@ -1,6 +1,6 @@
 import application from "../application.js";
 import { database } from "../database.js";
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 import { insertMeasurement } from "../test_helper.factories.js";
 
 describe("GET /legacy/data/:file_name", () => {
@@ -19,7 +19,7 @@ describe("GET /legacy/data/:file_name", () => {
     });
 
     const response = await application.request(`/legacy/data/${measurement.id} L.txt`);
-    expect(await response.text()).toEqual(measurement.left_channel!);
+    expect(await response.text()).toEqual(measurement.left_channel);
     expect(response.ok).toBe(true);
   });
 
@@ -31,7 +31,7 @@ describe("GET /legacy/data/:file_name", () => {
     });
 
     const response = await application.request(`/legacy/data/${measurement.id} R.txt`);
-    expect(await response.text()).toEqual(measurement.right_channel!);
+    expect(await response.text()).toEqual(measurement.right_channel);
     expect(response.ok).toBe(true);
   });
 });

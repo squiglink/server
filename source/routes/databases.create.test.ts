@@ -1,6 +1,6 @@
 import application from "../application.js";
 import { signIn } from "../test_helper.js";
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 
 describe("POST /databases", () => {
   it("responds with success and creates a database", async () => {

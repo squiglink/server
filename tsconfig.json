@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
-    "module": "Preserve",
-    "moduleResolution": "Bundler",
+    "module": "NodeNext",
+    "outDir": "output",
     "skipLibCheck": true,
     "strict": true,
     "target": "ESNext",
-    "types": ["bun-types"],
+    "types": ["node"],
     "verbatimModuleSyntax": true
   }
 }

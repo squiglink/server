@@ -1,6 +1,6 @@
 import application from "../application.js";
 import { database } from "../database.js";
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 import { insertUser } from "../test_helper.factories.js";
 import { signIn } from "../test_helper.js";
 
@@ -13,13 +13,13 @@ describe("GET /users/:id", () => {
     const { accessToken } = await signIn(user.id);
 
     const body = {
-      created_at: user.created_at.toISOString(),
+      created_at: user.created_at,
       display_name: user.display_name,
       email: user.email,
       id: user.id,
       role: user.role,
       scoring_system: user.scoring_system,
-      updated_at: user.updated_at.toISOString(),
+      updated_at: user.updated_at,
       username: user.username,
     };
 
@@ -36,13 +36,13 @@ describe("GET /users/:id", () => {
     });
 
     const body = {
-      created_at: user.created_at.toISOString(),
+      created_at: user.created_at,
       display_name: user.display_name,
       email: null,
       id: user.id,
       role: user.role,
       scoring_system: user.scoring_system,
-      updated_at: user.updated_at.toISOString(),
+      updated_at: user.updated_at,
       username: user.username,
     };
 

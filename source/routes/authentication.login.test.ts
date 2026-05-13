@@ -1,23 +1,20 @@
 import application from "../application.js";
 import configuration from "../configuration.js";
-import { beforeEach, describe, expect, it, mock } from "bun:test";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { database } from "../database.js";
 import { insertUser } from "../test_helper.factories.js";
+import { sendEmail } from "../services/send_email.js";
+import { validateCloudflareTurnstileToken } from "../services/validate_cloudflare_turnstile_token.js";
 
-const sendEmail = mock();
-mock.module("../services/send_email.js", () => ({ sendEmail }));
-
-const validateCloudflareTurnstileToken = mock();
-mock.module("../services/validate_cloudflare_turnstile_token.js", () => ({
-  validateCloudflareTurnstileToken,
-}));
+vi.mock("../configuration.js");
+vi.mock("../services/send_email.js");
+vi.mock("../services/validate_cloudflare_turnstile_token.js");
 
 describe("POST /authentication/login", () => {
   beforeEach(() => {
-    configuration.cloudflareTurnstileEnabled = false;
-    sendEmail.mockClear();
-    validateCloudflareTurnstileToken.mockClear();
-    sendEmail.mockResolvedValue({ success: true, id: "placeholder" });
+    vi.mocked(configuration).cloudflareTurnstileEnabled = false;
+    vi.clearAllMocks();
+    vi.mocked(sendEmail).mockResolvedValue({ success: true, id: "placeholder" });
   });
 
   it("responds with success and sends the magic link email", async () => {
@@ -48,7 +45,7 @@ describe("POST /authentication/login", () => {
   });
 
   it("responds with unauthorized if the email has failed to be sent", async () => {
-    sendEmail.mockResolvedValue({
+    vi.mocked(sendEmail).mockResolvedValue({
       message: "placeholder",
       name: "placeholder",
       statusCode: 500,
@@ -80,11 +77,11 @@ describe("POST /authentication/login", () => {
 
   describe("when Cloudflare Turnstile is enabled", () => {
     beforeEach(() => {
-      configuration.cloudflareTurnstileEnabled = true;
+      vi.mocked(configuration).cloudflareTurnstileEnabled = true;
     });
 
     it("responds with success if the Cloudflare Turnstile token is valid", async () => {
-      validateCloudflareTurnstileToken.mockResolvedValue({
+      vi.mocked(validateCloudflareTurnstileToken).mockResolvedValue({
         "error-codes": [],
         action: "placeholder",
         cdata: "placeholder",
@@ -112,7 +109,7 @@ describe("POST /authentication/login", () => {
     });
 
     it("responds with unauthorized if the Cloudflare Turnstile token is invalid", async () => {
-      validateCloudflareTurnstileToken.mockResolvedValue({
+      vi.mocked(validateCloudflareTurnstileToken).mockResolvedValue({
         success: false,
         "error-codes": ["invalid-input-response"],
       });

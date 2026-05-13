@@ -1,5 +1,5 @@
 import { database, touch } from "./database.js";
-import { describe, expect, it, jest } from "bun:test";
+import { describe, expect, it, vi } from "vitest";
 import { insertBrand } from "./test_helper.factories.js";
 
 describe(".touch", () => {
@@ -9,7 +9,8 @@ describe(".touch", () => {
       .execute(async (transaction) => {
         const createdBrand = await insertBrand(transaction);
 
-        jest.setSystemTime(new Date(Date.now() + 1));
+        vi.useFakeTimers();
+        vi.setSystemTime(new Date(createdBrand.updated_at).getTime() + 1);
 
         const updatedBrand = await transaction
           .updateTable("brands")
@@ -18,13 +19,13 @@ describe(".touch", () => {
           .returningAll()
           .executeTakeFirstOrThrow();
 
+        vi.useRealTimers();
+
         return { createdBrand, updatedBrand };
       });
 
     expect(new Date(updatedBrand.updated_at).getTime()).toBeGreaterThan(
       new Date(createdBrand.updated_at).getTime(),
     );
-
-    jest.setSystemTime();
   });
 });
